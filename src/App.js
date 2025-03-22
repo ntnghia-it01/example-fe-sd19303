@@ -2,6 +2,7 @@ import logo from "./logo.svg";
 import "./App.css";
 import StudentItem from "./components/StudentItem";
 import Button from "./components/Button";
+import Status from "./components/Status";
 
 function App() {
   // Tạo 1 danh sách SV
@@ -50,7 +51,9 @@ function App() {
 
   return (
     <div className="container">
-      <div class="table-responsive">
+      <Status type={0}/>
+      <Status type={1}/>
+      {/* <div class="table-responsive">
         <table class="table table-primary">
           <thead>
             <tr>
@@ -68,7 +71,7 @@ function App() {
       <Button title={"Test primary"} type="outline"/>
       <Button title={"Test primary"} type="default"/>
       <Button title={"Test primary"} type="disable"/>
-      <Button title={"Test primary"}/>
+      <Button title={"Test primary"}/> */}
     </div>
   );
 }
