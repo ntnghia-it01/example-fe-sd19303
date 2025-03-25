@@ -1,77 +1,110 @@
 import logo from "./logo.svg";
 import "./App.css";
-import StudentItem from "./components/StudentItem";
-import Button from "./components/Button";
-import Status from "./components/Status";
+import { useState } from "react";
 
 function App() {
-  // Tạo 1 danh sách SV
-  // MSSV, Họ tên, Điểm TB
-  // Tạo 1 Components hiển thị thông tin SV đó
-  // - MSSV
-  // - Họ và tên
-  // - Trạng thái: Nếu điểm TB >= 5 => "Pass Môn" : "Fail Môn"
-  // Dùng vòng lập duyệt qua danh sách SV
-  // Hiển thị thông tin vào components
+  // Khai báo 1 biến count có giá trị mặc định là 0
+  // Biến này có thể thay đổi giá trị
+  // let count = 0;
+  // [biến chứa giá trị, hàm setter]
+  // const [count, setCount] = useState(0);
 
-  const students = [
-    {
-      code: "PC1234",
-      name: "Nguyen Van A",
-      point: 7,
-    },
-    {
-      code: "PC1235",
-      name: "Nguyen Van B",
-      point: 4,
-    },
-    {
-      code: "PC1236",
-      name: "Nguyen Van C",
-      point: 9.75,
-    },
-  ];
+  // // Viết 1 hàm tăng count lên 1 đơn vị
+  // const handleCount = ()=>{
+  //   // count = count + 1;
+  //   // hàm set state của React JS đều là hàm
+  //   // bất đồng bộ
+  //   let countTemp = count + 1;
+  //   setCount(countTemp);
+  //   // TODO
+  //   // 500 dòng đều sử dụng giá trị sau khi count + 1
+  //   console.log(countTemp);
+  // }
 
-  const renderStudent = (value, item)=>(
-    <StudentItem code={value.code}
-      name={value.name}
-      point={value.point}
-      isPass={value.point >= 5}/>
-  )
+  // Khai báo 3 biến state MSSV, Tên, Điểm
+  // Làm 1 giao diện hiện thị thông tin giá trị của 3 biến trên
+  // Sử thẻ h
 
+  // 1 Form có 3 input có thể nhập vào thông tin tương ứng
 
+  const [code, setCode] = useState("PC12345");
+  const [name, setName] = useState("Nguyen Van A");
+  const [point, setPoint] = useState(7);
 
-  // Xây dựng 1 components Button
-  // Có props lần lượt là
-  // - title (Nội dung hiển thị bên trong button)
-  // - type
-  //     + "default" hoặc không nhập type => giao diện button primary
-  //     + "disable" => giao diện button disable (màu xám)
-  //     + "outline" => giao diện button background trong suốt, border màu xanh
+  // Tạo thêm 1 state là mảng sinh viên
+  // Có 1 item mẫu bao gồm mssv, họ tên và điểm của SV
+  // Dùng vòng lặp duyệt qua state trên để hiển thị ra bảng danh sách SV
+
+  // Xử lý sự kiện khi người dùng nhập thông tin vào ô input
+  // Nội dung hiển thị ở phía bên trên thông tin SV sẽ thay đổi theo
+  // Tạo arrow func lắng nghe sự kiện đó bên ngoài return
+
+  const handleChangeCode = (props)=>{
+    setCode(props.target.value)
+  }
+
+  const handleChangeName = (props)=>{
+    setName(props.target.value)
+  }
+
+  const handleChangePoint = (props)=>{
+    setPoint(props.target.value)
+  }
 
   return (
     <div className="container">
-      <Status type={0}/>
-      <Status type={1}/>
-      {/* <div class="table-responsive">
-        <table class="table table-primary">
-          <thead>
-            <tr>
-              <th scope="col">Code</th>
-              <th scope="col">Name</th>
-              <th scope="col">Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {students.map(renderStudent)}
-          </tbody>
-        </table>
+      <div className="text-center">
+        <h1 className="text-primary">MSSV: {code}</h1>
+        <h1 className="text-primary">Ho va ten: {name}</h1>
+        <h1 className="text-danger">Diem: {point}</h1>
+        <h1 className={point >= 5 ? "text-success" : "text-danger"}>
+          Trang thai: {point >= 5 ? "Pass" : "Fail"}
+        </h1>
+        {/* Thêm 1 thông tin trạng thái của sv */}
+        {/* Nếu điểm >= 5 hiển thị "Pass" chữ màu lục */}
+        {/* Nếu điểm < 5 hiển thị "Fail" chữ màu đỏ */}
       </div>
 
-      <Button title={"Test primary"} type="outline"/>
-      <Button title={"Test primary"} type="default"/>
-      <Button title={"Test primary"} type="disable"/>
-      <Button title={"Test primary"}/> */}
+      <div className="mt-5 col-6 offset-3">
+        <div class="mb-3">
+          <label for="" class="form-label">
+            MSSV
+          </label>
+          <input
+            type="text"
+            class="form-control"
+            placeholder="MSSV"
+            onChange={handleChangeCode}
+          />
+        </div>
+        <div class="mb-3">
+          <label for="" class="form-label">
+            Họ và tên
+          </label>
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Họ và tên"
+            onChange={handleChangeName}
+          />
+        </div>
+        <div class="mb-3">
+          <label for="" class="form-label">
+            Điểm
+          </label>
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Điểm"
+            onChange={handleChangePoint}
+          />
+        </div>
+      </div>
+      {/* <h1 className="text-danger">Count: {count}</h1>
+      <br/>
+      <button onClick={handleCount} className="btn btn-primary">Count</button> */}
+      {/* Viết 1 thẻ HTML để hiện thị giá trị biến count lên giao diện */}
+      {/* Viết 1 nút button click vào sẽ gọi hàm handleCount */}
     </div>
   );
 }
