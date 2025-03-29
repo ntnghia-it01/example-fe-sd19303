@@ -10,6 +10,8 @@ import Dashboard from './pages/Dashboard';
 import Products from './pages/Products';
 import MainUser from "./pages/MainUser";
 import MainAdmin from "./pages/MainAdmin";
+import Register from "./pages/Register";
+import RegisterUseHookForm from "./pages/RegisterUseHookForm";
 
 function App() {
 
@@ -29,6 +31,8 @@ function App() {
         <Route index element={<Home/>}/>
         {/* path của route con không có dấu / phía trước */}
         <Route path="login" element={<Login/>}/>
+        <Route path="register" element={<Register/>}/>
+        <Route path="register-use-hook-form" element={<RegisterUseHookForm/>}/>
       </Route>
 
       <Route path="/admin" element={<MainAdmin/>}>
@@ -37,6 +41,10 @@ function App() {
       </Route>
     </Routes>
   );
+
+  // Tạo 1 trang đăng ký với url /register
+  // Có thông các input sau
+  // username, password, name, class (dropdown)
 }
 
 export default App;
