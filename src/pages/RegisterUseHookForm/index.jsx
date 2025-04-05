@@ -5,6 +5,7 @@
 // Class bắt buộc chọn
 
 import { useForm } from "react-hook-form";
+import axios from 'axios'
 
 const RegisterUseHookForm = () => {
   const {
@@ -35,12 +36,89 @@ const RegisterUseHookForm = () => {
   // + phải là kiểu jpg || jpge || webp || png
   // + kích thước tối đa 10MB
 
-  const handleRegister = (props) => {
+  const handleRegister = async (props) => {
     console.log("register value === ", props);
+    // props => json {key: value} => tên của từng ô input
+    try{
+      let formData = new FormData();
+      formData.append("username", props.username);
+      formData.append("password", props.password);
+      formData.append("name", props.name);
+      formData.append("gender", props.gender);
+      formData.append("avatar", props.avatar[0])
+  
+      const res = await axios.post("http://172.16.18.45:8080/auth/add-user", formData)
+      console.log(res.data)
+
+      // Thêm thành công.
+      // Chuyển về lại trang danh sách user
+      // và có hiển thị được cái user vừa thêm
+      // sử dụng thư viện của react-router để chuyển trang
+    }catch(e){
+      console.log(e)
+    }
   };
 
-  const validateAvatar = (props)=>{
+  // Cho chọn nhiều ảnh
+  // Số lượng ảnh tối thiểu là 3
+  // Kiểu của tất cả các ảnh phải là
+  // jpg || jpge || webp || png
+  // Kích thước của mỗi ảnh không được vượt quá 15MB
+
+  // const validateAvatar = (props) => {
+  //   console.log("Avatar props === ", props);
+  //   if(props.length < 3){
+  //     return "Avatar required!";
+  //   }
+
+  //   const types = [
+  //     "image/jpeg", 
+  //     "image/png", 
+  //     "image/jpg", 
+  //     "image/webp"
+  //   ];
+
+  //   const maxSize = 1024 * 1024 * 15;
+
+  //   for(let index = 0; index < props.length; index++){
+  //     if(!types.includes(props[index].type)){
+  //       return "Avatar type error!";
+  //     }
+
+  //     if(props[index].size > maxSize){
+  //       return "Avatar size error!";
+  //     }
+  //   }
+
+  //   return true;
+  // }
+
+  const validateAvatar = (props) => {
     console.log("Avatar props === ", props);
+
+    // Bắt lỗi không chọn file
+    if(props.length == 0) {
+      return "Avatar required!";
+    }
+
+    // jpg || jpge || webp || png
+    // props[0].type => image/jpeg
+    const types = [
+      "image/jpeg", 
+      "image/png", 
+      "image/jpg", 
+      "image/webp"
+    ];
+    if(!types.includes(props[0].type)) {
+      return "Avatar type error!";
+    }
+
+    // kích thước tối đa 10MB
+    const maxSize = 1024 * 1024 * 10; // convert 10MB => byte
+    if(props[0].size > maxSize){
+      return "Avatar size error!"
+    }
+
     // props is Array
     // Giá trị image => items[0] => {type, size}
 
@@ -50,7 +128,7 @@ const RegisterUseHookForm = () => {
     // Không có Error
 
     // return "abc"; // Error sẽ là chuỗi được return
-  }
+  };
 
   return (
     <div className="container col-6 offset-3">
@@ -137,7 +215,7 @@ const RegisterUseHookForm = () => {
         <label for="" className="form-label">
           Gender
         </label>
-        <br/>
+        <br />
 
         <div class="form-check form-check-inline">
           <input
@@ -145,7 +223,7 @@ const RegisterUseHookForm = () => {
             type="radio"
             value="0"
             {...register("gender", {
-              required: {value: true, message: "Gender required!"}
+              required: { value: true, message: "Gender required!" },
             })}
           />
           <label class="form-check-label" for="">
@@ -158,13 +236,17 @@ const RegisterUseHookForm = () => {
             type="radio"
             value="1"
             {...register("gender", {
-              required: {value: true, message: "Gender required!"}
+              required: { value: true, message: "Gender required!" },
             })}
           />
           <label class="form-check-label" for="">
             Female
           </label>
         </div>
+
+        {errors["gender"] && (
+          <small className="text-danger">{errors["gender"]["message"]}</small>
+        )}
       </div>
 
       <div class="mb-3">
@@ -175,10 +257,16 @@ const RegisterUseHookForm = () => {
           type="file"
           class="form-control"
           aria-describedby="fileHelpId"
+          multiple
+          accept="image/*"
           {...register("avatar", {
-            validate: validateAvatar
+            validate: validateAvatar,
           })}
         />
+
+        {errors["avatar"] && (
+          <small className="text-danger">{errors["avatar"]["message"]}</small>
+        )}
       </div>
 
       <button

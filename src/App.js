@@ -12,6 +12,7 @@ import MainUser from "./pages/MainUser";
 import MainAdmin from "./pages/MainAdmin";
 import Register from "./pages/Register";
 import RegisterUseHookForm from "./pages/RegisterUseHookForm";
+import Users from "./pages/Users";
 
 function App() {
 
@@ -33,7 +34,14 @@ function App() {
         <Route path="login" element={<Login/>}/>
         <Route path="register" element={<Register/>}/>
         <Route path="register-use-hook-form" element={<RegisterUseHookForm/>}/>
+        <Route path="users" element={<Users/>}/>
       </Route>
+
+      {/* Tạo 1 trang danh sách user */}
+      {/* Giao diện sẽ là 1 bảng có các thông từ API trả về */}
+      {/* id, username, name, avatar, gender, role */}
+      {/* gender == 0 => Male, gender == 1 => Female */}
+      {/* role == 0 => Admin, role == 1 => user */}
 
       <Route path="/admin" element={<MainAdmin/>}>
         <Route path="dashboard" element={<Dashboard/>}/>
