@@ -6,8 +6,20 @@
 
 import { useForm } from "react-hook-form";
 import axios from 'axios'
+import {
+  useNavigate,
+  useSearchParams, // Lấy thông qua query params ?id=abc
+  // register-use-hook-form/:id => register-use-hook-form/123
+  useParams, // 123 => path
+} from 'react-router'
+import { useEffect } from "react";
+
+
+// Lấy giá trị của query params thông qua thư viên react-router
 
 const RegisterUseHookForm = () => {
+  const naviate = useNavigate();
+  const [queryParams, setQueryParams] = useSearchParams();
   const {
     register,
     formState: { errors }, // Dùng errors để hiển thị lỗi
@@ -24,6 +36,10 @@ const RegisterUseHookForm = () => {
       password: "1234567",
     },
   });
+
+  useEffect(()=>{
+    console.log("params === ", queryParams.get("id"))
+  }, [])
 
   // Thêm 2 trường dữ liệu
   // Radio button giới tính
@@ -47,8 +63,10 @@ const RegisterUseHookForm = () => {
       formData.append("gender", props.gender);
       formData.append("avatar", props.avatar[0])
   
-      const res = await axios.post("http://172.16.18.45:8080/auth/add-user", formData)
+      const res = await axios.post("http://172.16.26.135:8080/auth/add-user", formData)
       console.log(res.data)
+
+      naviate("/users");
 
       // Thêm thành công.
       // Chuyển về lại trang danh sách user
@@ -274,8 +292,13 @@ const RegisterUseHookForm = () => {
         type="button"
         className="btn btn-primary"
       >
-        Add
+        {queryParams.get("id") ? "Update" : "Add"}
       </button>
+
+      {/* queryParams.get("id") */}
+
+      {/* Nếu có query params thì nội dung của button là update */}
+      {/* Ngược lại là add */}
     </div>
   );
 };
