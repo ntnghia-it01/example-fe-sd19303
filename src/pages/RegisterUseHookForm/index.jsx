@@ -12,13 +12,14 @@ import {
   // register-use-hook-form/:id => register-use-hook-form/123
   useParams, // 123 => path
 } from 'react-router'
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import Constants from "../../Constants";
 
 
 // Lấy giá trị của query params thông qua thư viên react-router
 
 const RegisterUseHookForm = () => {
-  const naviate = useNavigate();
+  const navigate = useNavigate();
   const [queryParams, setQueryParams] = useSearchParams();
   const {
     register,
@@ -30,16 +31,33 @@ const RegisterUseHookForm = () => {
     reset, // Xoá nội dung bên trong form
     getValues, // getValues("username") => Lấy giá trị của ô input có key là username
     setValue, // setValue("username", "abc"); => Gán giá trị của ô input có key là username
-  } = useForm({
-    defaultValues: {
-      username: "abc",
-      password: "1234567",
-    },
-  });
+  } = useForm();
 
   useEffect(()=>{
     console.log("params === ", queryParams.get("id"))
+    // Gọi api get user info theo id trên url
+    // Sau đó dùng hàm setValue của react-hook-form
+    // để gán giá trị lấy được từ api vào gắn vào input tương ứng
+    // username, name, gender
+
+    if(queryParams.get("id")){
+      getUserInfo();
+    }
   }, [])
+
+  const getUserInfo = async () =>{
+    try{
+      const res = await axios.get(`${Constants.DOAMIN_API}/auth/user?id=${queryParams.get("id")}`)
+
+      setValue("username", res.data.data.username)
+      setValue("name", res.data.data.name)
+      setValue("gender", `${res.data.data.gender}`)
+
+      console.log(getValues())
+    }catch(e){
+      console.log("error === ", e);
+    }
+  }
 
   // Thêm 2 trường dữ liệu
   // Radio button giới tính
@@ -53,6 +71,41 @@ const RegisterUseHookForm = () => {
   // + kích thước tối đa 10MB
 
   const handleRegister = async (props) => {
+    // Nếu có id thì thực hiện chức năng sửa
+    // Gọi api sửa
+
+    if(queryParams.get("id")){
+      // Gọi api sửa
+      // Sau khi sửa thành công chuyển về trang danh sách user
+      try{
+        let formData = new FormData();
+        formData.append("username", props.username);
+        formData.append("password", props.password);
+        formData.append("name", props.name);
+        formData.append("gender", props.gender);
+        // Post 1 file
+        formData.append("avatar", props.avatar[0])
+        formData.append("id", queryParams.get("id"))
+
+        // Ví dụ api này cho post lên nhiều ảnh
+        // Key "avatar" => nhận 1 array file
+        // Ví dụ trong ô input cho 3 ảnh
+        // append => "avatar[0]"
+        // props.avatar => array (file)
+        // Post nhiều file
+        for(let index = 0; index < props.avatar.length; index++){
+          formData.append(`avatar[${index}]`, props.avatar[index]);
+        }
+
+        await axios.put(`${Constants.DOAMIN_API}/auth/update-user`, formData)
+
+        navigate("/users");
+      }catch(e){
+        console.log(e)
+      }
+      return;
+    }
+
     console.log("register value === ", props);
     // props => json {key: value} => tên của từng ô input
     try{
@@ -63,10 +116,10 @@ const RegisterUseHookForm = () => {
       formData.append("gender", props.gender);
       formData.append("avatar", props.avatar[0])
   
-      const res = await axios.post("http://172.16.26.135:8080/auth/add-user", formData)
+      const res = await axios.post(`${Constants.DOAMIN_API}/auth/add-user`, formData)
       console.log(res.data)
 
-      naviate("/users");
+      navigate("/users");
 
       // Thêm thành công.
       // Chuyển về lại trang danh sách user
