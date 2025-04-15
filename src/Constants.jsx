@@ -5,5 +5,5 @@
 // Tất cả các từ trong tên biến phải viết hoa
 // Nếu có nhiều hơn 1 từ cách nhau bằng dấu _
 export default {
-  DOAMIN_API: "http://172.16.20.44:8080"
+  DOAMIN_API: "http://172.16.28.2:8080"
 }

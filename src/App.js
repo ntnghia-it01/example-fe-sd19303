@@ -31,19 +31,25 @@ function App() {
       <Route path="/" element={<MainUser/>}>
         <Route index element={<Home/>}/>
         {/* path của route con không có dấu / phía trước */}
-        <Route path="login" element={<Login/>}/>
+        {/* <Route path="login" element={<Login/>}/>
         <Route path="register" element={<Register/>}/>
         <Route path="register-use-hook-form" element={<RegisterUseHookForm/>}/>
-        <Route path="users" element={<Users/>}/>
+         */}
       </Route>
 
-      {/* Tạo 1 trang danh sách user */}
-      {/* Giao diện sẽ là 1 bảng có các thông từ API trả về */}
-      {/* id, username, name, avatar, gender, role */}
-      {/* gender == 0 => Male, gender == 1 => Female */}
-      {/* role == 0 => Admin, role == 1 => user */}
+      {/* Tạo 1 trang login: username, password. URL => /login */}
+
+      {/* Tạo 1 trang dang sách user. Có đường đẫn là /admin/users */}
+      {/* Hiển thị danh sách tài khoản từ api */}
+
+      {/* Tạo 1 trang user info. Có đường dẫn là /user/info */}
+      {/* Hiển thị thông tin của user vừa đăng nhập */}
+      {/* Username, name, gender, avatar, role */}
+
+      <Route path="/login" element={<Login/>}/>
 
       <Route path="/admin" element={<MainAdmin/>}>
+        <Route path="users" element={<Users/>}/>
         <Route path="dashboard" element={<Dashboard/>}/>
         <Route path="products" element={<Products/>}/>
       </Route>
