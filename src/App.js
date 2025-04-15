@@ -25,34 +25,31 @@ function App() {
 
   return (
     <Routes>
-      {/* Khi người dùng mở vào trang */}
-      {/* localhost:3000 => Home */}
-      {/* localhost:3000/login => Login */}
-      <Route path="/" element={<MainUser/>}>
+
+      {/* Danh sách các trang không cần đăng nhập */}
+      <Route path="/">
         <Route index element={<Home/>}/>
-        {/* path của route con không có dấu / phía trước */}
-        {/* <Route path="login" element={<Login/>}/>
-        <Route path="register" element={<Register/>}/>
-        <Route path="register-use-hook-form" element={<RegisterUseHookForm/>}/>
-         */}
+        <Route path="/login" element={<Login/>}/>
       </Route>
 
-      {/* Tạo 1 trang login: username, password. URL => /login */}
+      {/* Danh sách những trang cần vai trò user để sử dụng */}
+      {/* Tạo 1 trang MainUser */}
+      {/* Để quản lý tất cả route của user */}
+      {/* Và thực hiện kiểm tra trạng thái đăng nhập */}
+      <Route path="/user" element={<MainUser/>}>
+        <Route path="info" element={<h1>User info</h1>}/>
+        <Route path="cart" element={<h1>User cart</h1>}/>
+        <Route path="order" element={<h1>User order</h1>}/>
+        <Route path="change-password" element={<h1>User change password</h1>}/>
+      </Route>
 
-      {/* Tạo 1 trang dang sách user. Có đường đẫn là /admin/users */}
-      {/* Hiển thị danh sách tài khoản từ api */}
-
-      {/* Tạo 1 trang user info. Có đường dẫn là /user/info */}
-      {/* Hiển thị thông tin của user vừa đăng nhập */}
-      {/* Username, name, gender, avatar, role */}
-
-      <Route path="/login" element={<Login/>}/>
-
+      {/* Danh sách những trang cần vai trò Admin để sử dụng */}
       <Route path="/admin" element={<MainAdmin/>}>
         <Route path="users" element={<Users/>}/>
         <Route path="dashboard" element={<Dashboard/>}/>
         <Route path="products" element={<Products/>}/>
       </Route>
+
     </Routes>
   );
 

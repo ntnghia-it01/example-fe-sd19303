@@ -20,32 +20,29 @@ const Login = () => {
   const handleLogin = async (props) => {
     try{
       const {username, password} = props;
-      // Gọi api đăng nhập
       let formData = new FormData();
-      // formData.append("username", props.username)
-      // formData.append("password", props.password)
-
       formData.append("username", username)
       formData.append("password", password)
-      const res = await axios.post(`${Constants.DOAMIN_API}/auth/login`)
-      console.log("login res === ", res.data);
 
-      // let expiresTime = new Date().getTime() + 1000 * 60 * 60 * 10;
-      // let expiresDate = new Date(expiresTime);
-      // Tăng expiresDate lên 10h tiếp theo 
+      const res = await axios.post(`${Constants.DOAMIN_API}/auth/login`, formData)
+      console.log("login res === ", res.data);
 
       let expiresDate = new Date();
       expiresDate.setHours(expiresDate.getHours() + 10)
 
       setCookie("token", res.data.data.token, {
-        path: "/*",
         expires: expiresDate// Date
       })
 
       setCookie("role", `${res.data.data.role}`, {
-        path: "/*",
         expires: expiresDate// Date
       })
+
+      if(res.data.data.role == 0){
+        navivgate("/admin/users")
+      }else {
+        navivgate("/user/info")
+      }
 
       // JWT
       // CN: Xác thực API
@@ -73,12 +70,6 @@ const Login = () => {
 
       // Set jwt vào cookie với key "token", thời hạn là 10h
       // Set role vào cookie với key "role", thời hạn là 10h
-
-      if(res.data.data.role == 0){
-        navivgate("/admin/users")
-      }else {
-        navivgate("/user/info")
-      }
 
       // Kiểm tra nếu role là admin thì chuyển về trang /admin/users
       // Kiểm tra nếu role là user thì chuyển về trang /user/info

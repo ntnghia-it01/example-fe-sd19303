@@ -2,8 +2,10 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router";
 import Constants from "../../Constants";
+import {useCookies} from 'react-cookie'
 
 const Users = () => {
+  const [cookies] = useCookies("token")
   const [data, setData] = useState([]);
 
   // http://172.16.18.45:8080/auth/users
@@ -43,10 +45,19 @@ const Users = () => {
 
   const getData = async () => {
     try {
-      const res = await axios.get(`${Constants.DOAMIN_API}/auth/users`);
+      // Authorization: "Bearer token"
+
+      // Lấy giá trị token đã lưu từ cookie 
+      // Gửi token lên headers của api
+      const token = cookies.token
+
+      const res = await axios.get(`${Constants.DOAMIN_API}/auth/users`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
       console.log(res.data.data);
       setData(res.data.data);
-      console.log("abc");
     } catch (e) {
       console.log(e);
     }
